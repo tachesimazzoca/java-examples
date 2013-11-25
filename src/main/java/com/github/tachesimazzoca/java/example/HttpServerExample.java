@@ -28,13 +28,12 @@ public final class HttpServerExample {
             StringBuilder response = new StringBuilder();
             Headers req = t.getRequestHeaders();
             for (String key : req.keySet()) {
-                response.append(key);
-                response.append(":");
                 for (String value : req.get(key)) {
-                  response.append(" ");
+                  response.append(key);
+                  response.append(": ");
                   response.append(value);
+                  response.append("\n");
                 }
-                response.append("\n");
             }
             String body = response.toString();
             t.sendResponseHeaders(200, body.length());

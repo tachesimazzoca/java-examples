@@ -16,7 +16,7 @@ public final class PropertiesExample {
         prop.setProperty("fuga", "baz");
 
         System.out.println("Properties#propertyNames: java.util.Enumeration");
-        Enumeration names = prop.propertyNames();
+        Enumeration<?> names = prop.propertyNames();
         while (names.hasMoreElements()) {
             String key = (String) names.nextElement();
             System.out.println(key + "=" + prop.getProperty(key));

@@ -33,9 +33,6 @@ public final class ConcurrentHashMapExample {
     private static class CreateMapTask implements Runnable {
         private Map<Integer, Integer> map;
 
-        protected CreateMapTask() {
-        }
-
         public CreateMapTask(Map<Integer, Integer> map) {
             this.map = map;
         }

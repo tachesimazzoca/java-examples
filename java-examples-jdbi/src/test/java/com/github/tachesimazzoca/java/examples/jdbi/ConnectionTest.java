@@ -11,18 +11,12 @@ import org.skife.jdbi.v2.Handle;
 import java.sql.Connection;
 
 public class ConnectionTest {
-
-    private static JdbcConnectionPool createJdbcConnectionPool() {
+    @Test
+    public void testDataSourceConnections() throws Exception {
         JdbcConnectionPool pool = JdbcConnectionPool.create(
                 "jdbc:h2:mem:test", "", "");
         pool.setMaxConnections(5);
         pool.setLoginTimeout(1);
-        return pool;
-    }
-
-    @Test
-    public void testDataSourceConnections() throws Exception {
-        JdbcConnectionPool pool = createJdbcConnectionPool();
 
         DBI dbi = new DBI(pool);
         Handle h1 = dbi.open();

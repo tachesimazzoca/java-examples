@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.github.tachesimazzoca.java.examples.hibernate">
+  <class name="User" table="USERS">
+    <id name="id" column="ID"><generator class="native"/></id>
+    <property name="name" column="NAME"/>
+    <property name="createdAt" column="CREATED_AT" type="timestamp"/>
+    <property name="updatedAt" column="UPDATED_AT" type="timestamp"/>
+  </class>
+</hibernate-mapping>

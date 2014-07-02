@@ -13,8 +13,10 @@ public class UsersFixture {
         dbi.withHandle(new HandleCallback<Void>() {
             public Void withHandle(Handle h) {
                 h.execute("DROP TABLE IF EXISTS users");
-                h.execute("CREATE TABLE users (id int" +
-                        ", name varchar(255) NOT NULL default '')");
+                h.execute("CREATE TABLE users (" +
+                        "id int(11) NOT NULL auto_increment," +
+                        "name varchar(255) NOT NULL default ''," + 
+                        "PRIMARY KEY(id))");
                 return null;
             }
         });

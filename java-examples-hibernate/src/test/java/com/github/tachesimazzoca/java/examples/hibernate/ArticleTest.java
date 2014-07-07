@@ -7,25 +7,28 @@ import org.hibernate.Session;
 
 import java.util.List;
 
-public class UserTest {
+public class ArticleTest {
     @Test
     public void testTable() {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<Object[]> rows = s.createSQLQuery("SHOW COLUMNS FROM users")
+        List<Object[]> rows = s.createSQLQuery("SHOW COLUMNS FROM articles")
                 .list();
-        assertEquals(4, rows.size());
+        assertEquals(5, rows.size());
         Object[] idInfo = rows.get(0);
         assertEquals("ID", idInfo[0]);
         assertEquals("BIGINT(19)", idInfo[1]);
-        Object[] nameInfo = rows.get(1);
-        assertEquals("NAME", nameInfo[0]);
-        assertEquals("VARCHAR(255)", nameInfo[1]);
-        Object[] createdAtInfo = rows.get(2);
+        Object[] titleInfo = rows.get(1);
+        assertEquals("TITLE", titleInfo[0]);
+        assertEquals("VARCHAR(255)", titleInfo[1]);
+        Object[] bodyInfo = rows.get(2);
+        assertEquals("BODY", bodyInfo[0]);
+        assertEquals("VARCHAR(2147483647)", bodyInfo[1]);
+        Object[] createdAtInfo = rows.get(3);
         assertEquals("CREATED_AT", createdAtInfo[0]);
         assertEquals("TIMESTAMP(23)", createdAtInfo[1]);
-        Object[] updatedAtInfo = rows.get(3);
+        Object[] updatedAtInfo = rows.get(4);
         assertEquals("UPDATED_AT", updatedAtInfo[0]);
         assertEquals("TIMESTAMP(23)", updatedAtInfo[1]);
         s.getTransaction().commit();
@@ -35,30 +38,32 @@ public class UserTest {
     public void testSaveAndLoad() {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.createSQLQuery("TRUNCATE TABLE users").executeUpdate();
         int max = 10;
         long created = System.currentTimeMillis();
         for (int n = 1; n <= max; n++) {
-            User a = new User();
-            a.setName("Created User" + n);
+            Article a = new Article();
+            a.setTitle("title" + n);
+            a.setBody("body" + n);
             a.setCreatedAt(new java.util.Date(created));
             a.setUpdatedAt(new java.util.Date(created));
             s.save(a);
         }
         s.getTransaction().commit();
-
+        
         s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         long updated = System.currentTimeMillis();
+        long offset = 100;
         for (int n = 1; n <= max; n++) {
-            long id = (long) n;
-            User a = (User) s.load(User.class, id);
+            long id = offset + n;
+            Article a = (Article) s.load(Article.class, id);
             assertEquals(id, a.getId());
-            assertEquals("Created User" + id, a.getName());
+            assertEquals("title" + n, a.getTitle());
+            assertEquals("body" + n, a.getBody());
             assertEquals(created, a.getCreatedAt().getTime());
             assertEquals(created, a.getUpdatedAt().getTime());
 
-            a.setName("Updated User" + a.getId());
+            a.setTitle("updated title" + n);
             a.setUpdatedAt(new java.util.Date(updated));
             s.save(a);
         }
@@ -67,14 +72,14 @@ public class UserTest {
         s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<User> users = s.createQuery("from User").list();
+        List<Article> articles = s.createQuery("from Article").list();
         s.getTransaction().commit();
-        assertEquals(max, users.size());
-        for (User user : users) {
-            long id = user.getId();
-            assertEquals("Updated User" + id, user.getName());
-            assertEquals(created, user.getCreatedAt().getTime());
-            assertEquals(updated, user.getUpdatedAt().getTime());
+        assertEquals(max, articles.size());
+        for (Article article : articles) {
+            long id = article.getId();
+            assertEquals("updated title" + (id % offset), article.getTitle());
+            assertEquals(created, article.getCreatedAt().getTime());
+            assertEquals(updated, article.getUpdatedAt().getTime());
         }
     }
 }

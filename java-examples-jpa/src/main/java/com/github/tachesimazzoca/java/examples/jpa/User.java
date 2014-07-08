@@ -22,7 +22,7 @@ public class User {
         this.id = id;
     }
 
-    @Column(name = "name")
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL default ''")
     public String getName() {
         return name;
     }

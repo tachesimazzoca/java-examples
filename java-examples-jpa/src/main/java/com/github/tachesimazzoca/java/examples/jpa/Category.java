@@ -4,33 +4,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "categories")
-@EntityListeners(Category.CategoryListener.class)
+@EntityListeners(VersioningListener.class)
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long id;
 
-    @NotNull
-    @Pattern(regexp = "^[0-9]+(-[0-9]+)*$")
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL default ''")
     private String code;
-
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL default ''")
     private String name;
-
-    @Column(columnDefinition = "TINYINT(1) NOT NULL default 0")
     private int deleted;
+
+    @Column(name = "created_at")
+    private java.util.Date createdAt;
+
+    @Column(name = "updated_at")
+    private java.util.Date updatedAt;
 
     public long getId() {
         return id;
@@ -71,15 +64,19 @@ public class Category {
             this.deleted = 0;
     }
 
-    @PostLoad
-    public void postLoad() {
-        System.out.println("postLoaded");
+    public java.util.Date getCreatedAt() {
+        return createdAt;
     }
 
-    public static class CategoryListener {
-        @PrePersist
-        public void prePersist(Category a) {
-            System.out.println("prePersisted");
-        }
+    public void setCreatedAt(java.util.Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public java.util.Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(java.util.Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

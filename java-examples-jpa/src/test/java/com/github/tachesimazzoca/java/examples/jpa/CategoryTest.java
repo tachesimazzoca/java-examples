@@ -1,17 +1,24 @@
 package com.github.tachesimazzoca.java.examples.jpa;
 
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 public class CategoryTest {
+    @BeforeClass
+    public static void setUp() {
+        EntityManager em = JPA.em();
+        DDL.resetTables(em);
+        em.close();
+    }
+
     @Test
     public void testSaveAndLoad() {
         EntityManager em = JPA.em();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+
+        em.getTransaction().begin();
         for (int n = 1; n <= 5; n++) {
             Category a = new Category();
             a.setCode(String.format("100-%03d", n));
@@ -20,7 +27,7 @@ public class CategoryTest {
             em.persist(a);
             em.flush();
         }
-        tx.commit();
+        em.getTransaction().commit();
 
         for (int n = 1; n <= 5; n++) {
             Category a = em.find(Category.class, (long) n);
@@ -32,14 +39,14 @@ public class CategoryTest {
             assertTrue(a.getCreatedAt().equals(a.getUpdatedAt()));
         }
 
-        tx.begin();
+        em.getTransaction().begin();
         for (int n = 1; n <= 5; n++) {
             Category a = em.find(Category.class, (long) n);
             a.setName("updated category" + n);
             em.merge(a);
             em.flush();
         }
-        tx.commit();
+        em.getTransaction().commit();
 
         for (int n = 1; n <= 5; n++) {
             Category a = em.find(Category.class, (long) n);

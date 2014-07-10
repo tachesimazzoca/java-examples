@@ -1,6 +1,7 @@
 package com.github.tachesimazzoca.java.examples.jpa;
 
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -8,16 +9,20 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.ImmutableSet;
+import java.util.HashSet;
 
 public class ArticleTest {
     @BeforeClass
     public static void setUp() {
         EntityManager em = JPA.em();
         DDL.resetTables(em);
+        em.close();
+    }
+
+    @Before
+    public void beforeTest() {
+        EntityManager em = JPA.em();
+        DDL.clearTables(em);
         em.close();
     }
 
@@ -132,9 +137,8 @@ public class ArticleTest {
         em.persist(a2);
         em.getTransaction().commit();
 
-        int max = 5;
-        Long[] ids = new Long[max];
-        for (int i = 0; i < max; i++) {
+        Set<Long> ids = new HashSet<Long>();
+        for (int i = 0; i < 5; i++) {
             int n = i + 1;
             em.getTransaction().begin();
             Category cat = new Category();
@@ -142,43 +146,89 @@ public class ArticleTest {
             cat.setName(String.format("category%d", n));
             em.persist(cat);
             em.getTransaction().commit();
-            ids[i] = cat.getId();
+            ids.add(cat.getId());
         }
         em.getTransaction().begin();
-        for (int i = 0; i < ids.length; i++) {
-            a1.addCategory(em.find(Category.class, ids[i]));
+        for (Long id : ids) {
+            a1.addCategory(em.find(Category.class, id));
         }
         em.merge(a1);
         em.getTransaction().commit();
 
         em.getTransaction().begin();
-        ImmutableSet.Builder<Long> ids2 = ImmutableSet.builder();
-        for (int i = 0; i < ids.length; i += 2) {
-            a2.addCategory(em.find(Category.class, ids[i]));
-            ids2.add(ids[i]);
+        Set<Long> ids2 = new HashSet<Long>();
+        for (Long id : ids) {
+            if (id % 2 != 0)
+                continue;
+            a2.addCategory(em.find(Category.class, id));
+            ids2.add(id);
         }
         em.merge(a2);
         em.getTransaction().commit();
 
+        Set<Long> categories1 = new HashSet<Long>();
         a1 = em.find(Article.class, a1.getId());
-        Set<Long> categories1 = ImmutableSet.copyOf(
-                Iterables.transform(a1.getCategories(),
-                        new Function<Category, Long>() {
-                            public Long apply(Category a) {
-                                return a.getId();
-                            }
-                        }));
-        assertEquals(ImmutableSet.<Long> copyOf(ids), categories1);
+        for (Category cat : a1.getCategories()) {
+            categories1.add(cat.getId());
+        }
+        assertEquals(ids, categories1);
 
+        Set<Long> categories2 = new HashSet<Long>();
         a2 = em.find(Article.class, a2.getId());
-        Set<Long> categories2 = ImmutableSet.copyOf(
-                Iterables.transform(a2.getCategories(),
-                        new Function<Category, Long>() {
-                            public Long apply(Category a) {
-                                return a.getId();
-                            }
-                        }));
-        assertEquals(ids2.build(), categories2);
+        for (Category cat : a2.getCategories()) {
+            categories2.add(cat.getId());
+        }
+        assertEquals(ids2, categories2);
+
+        em.close();
+    }
+
+    @Test
+    public void testSelectWithNumOfComments() {
+        EntityManager em = JPA.em();
+
+        Set<Long> ids = new HashSet<Long>();
+        em.getTransaction().begin();
+        for (int i = 0; i < 5; i++) {
+            Article a = new Article();
+            a.setDeleted(i % 2);
+            em.persist(a);
+            if (!a.isDeleted()) {
+                ids.add(a.getId());
+            }
+        }
+        em.getTransaction().commit();
+
+        List<ArticleSearch> rows;
+        rows = em.createNamedQuery(
+                "selectArticlesWithNumOfComments", ArticleSearch.class)
+                .getResultList();
+        assertEquals(3, rows.size());
+        for (ArticleSearch row : rows) {
+            assertTrue(ids.contains(row.id));
+            assertEquals(0, row.numOfComments);
+        }
+
+        for (Long id : ids) {
+            em.getTransaction().begin();
+            Article a = em.find(Article.class, id);
+            int max = (int) (id * 2);
+            for (int i = 0; i < max; i++) {
+                ArticleComment ac = new ArticleComment();
+                a.addArticleComment(ac);
+            }
+            em.merge(a);
+            em.getTransaction().commit();
+        }
+
+        rows = em.createNamedQuery(
+                "selectArticlesWithNumOfComments", ArticleSearch.class)
+                .getResultList();
+        assertEquals(3, rows.size());
+        for (ArticleSearch row : rows) {
+            assertTrue(ids.contains(row.id));
+            assertEquals(row.id * 2, row.numOfComments);
+        }
 
         em.close();
     }

@@ -65,4 +65,13 @@ public class DDL {
         }
         em.getTransaction().commit();
     }
+
+    public static void clearTables(EntityManager em) {
+        em.getTransaction().begin();
+        for (Map.Entry<String, String> ddl : schema.entrySet()) {
+            em.createNativeQuery("TRUNCATE TABLE " + ddl.getKey())
+                    .executeUpdate();
+        }
+        em.getTransaction().commit();
+    }
 }

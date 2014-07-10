@@ -27,12 +27,13 @@ public class EntityManagerTest {
                 "SHOW COLUMNS FROM users").getResultList();
         em.close();
 
-        assertEquals(2, rows.size());
+        assertEquals(3, rows.size());
         Set<String> columns = new HashSet<String>();
         for (Object[] row : rows) {
             columns.add((String) row[0]);
         }
         assertTrue(columns.contains("id"));
         assertTrue(columns.contains("name"));
+        assertTrue(columns.contains("last_modified"));
     }
 }

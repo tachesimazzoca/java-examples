@@ -13,6 +13,9 @@ public class DDL {
                 "users", "CREATE TABLE users (" +
                         "id BIGINT(19) NOT NULL auto_increment," +
                         "name VARCHAR(255) NOT NULL default ''," +
+                        "version BIGINT(19) NOT NULL default 0," +
+                        "created_at TIMESTAMP," +
+                        "updated_at TIMESTAMP," +
                         "PRIMARY KEY (id))",
 
                 "categories", "CREATE TABLE categories (" +

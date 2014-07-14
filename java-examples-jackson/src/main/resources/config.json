@@ -1,0 +1,9 @@
+{
+  "mode": "DEVELOPMENT"
+  
+, "name": "Java Examples | Jackson"
+
+, "server": {
+    "port": 9090
+  } 
+}

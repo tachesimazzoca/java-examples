@@ -1,9 +1,10 @@
 {
   "mode": "DEVELOPMENT"
-  
 , "name": "Java Examples | Jackson"
+, "resources": [ "app.resources", "app.more.resources" ]
 
 , "server": {
     "port": 9090
+  , "host": [ "127.0.0.1", "192.168.56.101" ]
   } 
 }

@@ -1,8 +1,12 @@
 package com.github.tachesimazzoca.java.examples.jackson;
 
+import java.util.List;
+import java.net.InetAddress;
+
 public class Config {
     private Mode mode;
     private String name;
+    private List<String> resources;
     private Server server;
 
     public Mode getMode() {
@@ -21,6 +25,14 @@ public class Config {
         this.name = name;
     }
 
+    public List<String> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<String> resources) {
+        this.resources = resources;
+    }
+
     public Server getServer() {
         return server;
     }
@@ -35,6 +47,7 @@ public class Config {
 
     public class Server {
         private int port;
+        private InetAddress[] host;
 
         public int getPort() {
             return port;
@@ -42,6 +55,14 @@ public class Config {
 
         public void setPort(int port) {
             this.port = port;
+        }
+
+        public InetAddress[] getHost() {
+            return host;
+        }
+
+        public void setHost(InetAddress[] host) {
+            this.host = host;
         }
     }
 }

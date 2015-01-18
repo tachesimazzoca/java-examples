@@ -19,12 +19,7 @@ public class OkayServerHandler extends SimpleChannelHandler {
         ok.writeBytes("OK\r\n".getBytes());
         ChannelFuture f = ch.write(ok);
 
-        f.addListener(new ChannelFutureListener() {
-            public void operationComplete(ChannelFuture future) {
-                Channel ch = future.getChannel();
-                ch.close();
-            }
-        });
+        f.addListener(ChannelFutureListener.CLOSE);
     }
 
     @Override

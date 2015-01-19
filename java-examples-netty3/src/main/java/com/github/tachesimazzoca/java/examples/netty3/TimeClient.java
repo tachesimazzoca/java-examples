@@ -2,6 +2,7 @@ package com.github.tachesimazzoca.java.examples.netty3;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -29,6 +30,12 @@ public class TimeClient {
         );
         bootstrap.setOption("tcpNoDelay", true);
         bootstrap.setOption("keepAlive", true);
-        bootstrap.connect(new InetSocketAddress("localhost", 9000));
+
+        ChannelFuture f = bootstrap.connect(new InetSocketAddress("localhost", 9000));
+        f.awaitUninterruptibly();
+        if (!f.isSuccess())
+            f.getCause().printStackTrace();
+        f.getChannel().getCloseFuture().awaitUninterruptibly();
+        factory.releaseExternalResources();
     }
 }

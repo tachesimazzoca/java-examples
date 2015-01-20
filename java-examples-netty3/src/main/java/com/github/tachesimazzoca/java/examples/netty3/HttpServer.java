@@ -29,6 +29,8 @@ public class HttpServer {
         @Override
         public ChannelPipeline getPipeline() throws Exception {
             ChannelPipeline newPipeline = Channels.pipeline();
+            newPipeline.addLast("tracer", new TraceHandler());
+
             // netty.handler.codec.http
             newPipeline.addLast("decoder", new HttpRequestDecoder());
             newPipeline.addLast("encoder", new HttpResponseEncoder());

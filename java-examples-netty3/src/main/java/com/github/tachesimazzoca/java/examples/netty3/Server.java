@@ -29,7 +29,9 @@ public class Server {
                     public ChannelPipeline getPipeline() throws
                             InstantiationException,
                             IllegalAccessException {
-                        return Channels.pipeline((ChannelHandler) clz.newInstance());
+                        return Channels.pipeline(
+                                new TraceHandler(),
+                                (ChannelHandler) clz.newInstance());
                     }
                 }
         );

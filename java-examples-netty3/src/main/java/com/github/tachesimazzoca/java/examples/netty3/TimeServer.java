@@ -22,6 +22,7 @@ public class TimeServer {
                     @Override
                     public ChannelPipeline getPipeline() {
                         return Channels.pipeline(
+                                new TraceHandler(),
                                 new TimeEncoder(),
                                 new TimeServerHandler());
                     }

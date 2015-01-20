@@ -23,6 +23,7 @@ public class TimeClient {
                     @Override
                     public ChannelPipeline getPipeline() {
                         return Channels.pipeline(
+                                new TraceHandler(),
                                 new TimeDecoder(),
                                 new TimeClientHandler());
                     }

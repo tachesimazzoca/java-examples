@@ -13,19 +13,27 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 
 public class HttpServerHandler extends SimpleChannelHandler {
     @Override
-    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
+            throws HttpServerException {
+
         Object msg = e.getMessage();
         if (msg instanceof HttpRequest) {
             System.out.println((HttpRequest) msg);
         }
-        throw new IllegalArgumentException("Server Error");
+        throw new HttpServerException("Server Error");
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-        DefaultHttpResponse response = new DefaultHttpResponse(
-                HttpVersion.HTTP_1_1, HttpResponseStatus.SERVICE_UNAVAILABLE);
-        response.headers().set(HttpHeaders.Names.CONNECTION, "close");
-        ctx.getChannel().write(response).addListener(ChannelFutureListener.CLOSE);
+        Throwable t = e.getCause();
+        if (t instanceof HttpServerException) {
+            DefaultHttpResponse response = new DefaultHttpResponse(
+                    HttpVersion.HTTP_1_1, HttpResponseStatus.SERVICE_UNAVAILABLE);
+            response.headers().set(HttpHeaders.Names.CONNECTION, "close");
+            ctx.getChannel().write(response).addListener(ChannelFutureListener.CLOSE);
+        } else {
+            t.printStackTrace();
+            ctx.getChannel().close();
+        }
     }
 }

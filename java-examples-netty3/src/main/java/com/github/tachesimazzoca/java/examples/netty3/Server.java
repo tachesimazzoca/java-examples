@@ -12,20 +12,24 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 public class Server {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         ChannelFactory factory = new NioServerSocketChannelFactory(
                 Executors.newCachedThreadPool(), // boss
                 Executors.newCachedThreadPool()  // worker
         );
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        final Class<? extends ChannelHandler> clz = TimeServerHandler.class;
+        final Class<?> clz;
+        if (args.length < 1)
+            clz = DiscardServerHandler.class;
+        else
+            clz = Class.forName(args[0]);
         bootstrap.setPipelineFactory(
                 new ChannelPipelineFactory() {
                     @Override
                     public ChannelPipeline getPipeline() throws
                             InstantiationException,
                             IllegalAccessException {
-                        return Channels.pipeline(clz.newInstance());
+                        return Channels.pipeline((ChannelHandler) clz.newInstance());
                     }
                 }
         );

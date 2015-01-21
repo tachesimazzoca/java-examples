@@ -15,11 +15,19 @@ public class HttpServerHandler extends SimpleChannelHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
             throws HttpServerException {
+        // If the attachment has an channel ID, a response has already been committed.
+        Integer id = (Integer) ctx.getAttachment();
+        if (null != id) {
+            return;
+        }
+        // Set the channel ID as the state that the response has been committed.
+        ctx.setAttachment(e.getChannel().getId());
 
         Object msg = e.getMessage();
         if (msg instanceof HttpRequest) {
-            System.out.println((HttpRequest) msg);
+            System.out.println(msg);
         }
+
         throw new HttpServerException("Server Error");
     }
 

@@ -6,12 +6,12 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
-public class DiscardServerHandler extends SimpleChannelHandler {
+public class UploadServerHandler extends SimpleChannelHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-        System.out.println(Thread.currentThread().getName());
-
         ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
+
+        // Dump uploaded bytes
         int n = 0;
         while (buffer.readable()) {
             byte b = buffer.readByte();

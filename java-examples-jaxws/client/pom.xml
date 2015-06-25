@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.tachesimazzoca</groupId>
-    <artifactId>java-examples-jaxws</artifactId>
+    <artifactId>java-examples-jaxws-client-app</artifactId>
     <packaging>jar</packaging>
     <version>0.0.0-SNAPSHOT</version>
-    <name>Java Examples | JAX-WS</name>
+    <name>Java Examples | JAX-WS Client</name>
     <url>http://github.com/tachesimazzoca/java-examples</url>
     <properties>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -16,9 +16,11 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>2.1.7</version>
+            <groupId>com.github.tachesimazzoca</groupId>
+            <artifactId>java-examples-jaxws-client</artifactId>
+            <version>0.0.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/java-examples-jaxws-client.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -30,34 +32,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.2.2.v20140723</version>
-                <configuration>
-                    <httpConnector>
-                        <port>9000</port>
-                        <host>0.0.0.0</host>
-                    </httpConnector>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <webApp>
-                        <contextPath>/java-examples-jaxws</contextPath>
-                    </webApp>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <warName>java-examples-jaxws</warName>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/webapp</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9</version>

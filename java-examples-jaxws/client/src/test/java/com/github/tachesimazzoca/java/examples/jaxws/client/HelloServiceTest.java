@@ -10,4 +10,13 @@ public class HelloServiceTest {
         HelloService service = new HelloService();
         assertEquals("Hello Foo!", service.getHelloPort().sayHello("Foo"));
     }
+
+    @Test
+    public void testCalcArea() {
+        HelloService service = new HelloService();
+        Point p = new Point();
+        p.setX(5);
+        p.setY(7);
+        assertEquals(35, service.getHelloPort().calcArea(p));
+    }
 }

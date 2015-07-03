@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://ws.axis.examples.java.tachesimazzoca.github.com/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  targetNamespace="http://ws.axis.examples.java.tachesimazzoca.github.com/" name="HelloService">
+
+  <types>
+    <xs:schema xmlns:tns="http://ws.axis.examples.java.tachesimazzoca.github.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.axis.examples.java.tachesimazzoca.github.com/">
+      <xs:element name="calcArea" type="tns:calcArea" />
+      <xs:element name="calcAreaResponse" type="tns:calcAreaResponse" />
+      <xs:element name="point" type="tns:point" />
+      <xs:element name="sayHello" type="tns:sayHello" />
+      <xs:element name="sayHelloResponse" type="tns:sayHelloResponse" />
+      <xs:complexType name="calcArea">
+        <xs:sequence>
+          <xs:element name="arg0" type="tns:point" minOccurs="0" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="point">
+        <xs:sequence>
+          <xs:element name="x" type="xs:int" />
+          <xs:element name="y" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="calcAreaResponse">
+        <xs:sequence>
+          <xs:element name="return" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sayHello">
+        <xs:sequence>
+          <xs:element name="arg0" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sayHelloResponse">
+        <xs:sequence>
+          <xs:element name="return" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+
+  <message name="calcArea">
+    <part name="parameters" element="tns:calcArea" />
+  </message>
+  <message name="calcAreaResponse">
+    <part name="parameters" element="tns:calcAreaResponse" />
+  </message>
+  <message name="sayHello">
+    <part name="parameters" element="tns:sayHello" />
+  </message>
+  <message name="sayHelloResponse">
+    <part name="parameters" element="tns:sayHelloResponse" />
+  </message>
+  <portType name="Hello">
+    <operation name="calcArea">
+      <input message="tns:calcArea" />
+      <output message="tns:calcAreaResponse" />
+    </operation>
+    <operation name="sayHello">
+      <input message="tns:sayHello" />
+      <output message="tns:sayHelloResponse" />
+    </operation>
+  </portType>
+
+  <binding name="HelloPortBinding" type="tns:Hello">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="calcArea">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="sayHello">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+
+  <service name="HelloService">
+    <port name="HelloPort" binding="tns:HelloPortBinding">
+      <soap:address location="http://localhost:9000/java-examples-axis/hello.ws" />
+    </port>
+  </service>
+</definitions>

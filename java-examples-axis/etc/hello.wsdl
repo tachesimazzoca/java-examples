@@ -1,95 +1,106 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<definitions
-  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-  xmlns:tns="http://ws.axis.examples.java.tachesimazzoca.github.com/"
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns="http://schemas.xmlsoap.org/wsdl/"
-  targetNamespace="http://ws.axis.examples.java.tachesimazzoca.github.com/" name="HelloService">
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://localhost:9000/java-examples-axis/services/HelloApi" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://localhost:9000/java-examples-axis/services/HelloApi" xmlns:intf="http://localhost:9000/java-examples-axis/services/HelloApi" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
 
-  <types>
-    <xs:schema xmlns:tns="http://ws.axis.examples.java.tachesimazzoca.github.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.axis.examples.java.tachesimazzoca.github.com/">
-      <xs:element name="calcArea" type="tns:calcArea" />
-      <xs:element name="calcAreaResponse" type="tns:calcAreaResponse" />
-      <xs:element name="point" type="tns:point" />
-      <xs:element name="sayHello" type="tns:sayHello" />
-      <xs:element name="sayHelloResponse" type="tns:sayHelloResponse" />
-      <xs:complexType name="calcArea">
-        <xs:sequence>
-          <xs:element name="arg0" type="tns:point" minOccurs="0" />
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="point">
-        <xs:sequence>
-          <xs:element name="x" type="xs:int" />
-          <xs:element name="y" type="xs:int" />
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="calcAreaResponse">
-        <xs:sequence>
-          <xs:element name="return" type="xs:int" />
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="sayHello">
-        <xs:sequence>
-          <xs:element name="arg0" type="xs:string" minOccurs="0" />
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="sayHelloResponse">
-        <xs:sequence>
-          <xs:element name="return" type="xs:string" minOccurs="0" />
-        </xs:sequence>
-      </xs:complexType>
-    </xs:schema>
-  </types>
+   <wsdl:message name="absRequest">
 
-  <message name="calcArea">
-    <part name="parameters" element="tns:calcArea" />
-  </message>
-  <message name="calcAreaResponse">
-    <part name="parameters" element="tns:calcAreaResponse" />
-  </message>
-  <message name="sayHello">
-    <part name="parameters" element="tns:sayHello" />
-  </message>
-  <message name="sayHelloResponse">
-    <part name="parameters" element="tns:sayHelloResponse" />
-  </message>
-  <portType name="Hello">
-    <operation name="calcArea">
-      <input message="tns:calcArea" />
-      <output message="tns:calcAreaResponse" />
-    </operation>
-    <operation name="sayHello">
-      <input message="tns:sayHello" />
-      <output message="tns:sayHelloResponse" />
-    </operation>
-  </portType>
+      <wsdl:part name="arg0" type="xsd:int"/>
 
-  <binding name="HelloPortBinding" type="tns:Hello">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-    <operation name="calcArea">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="sayHello">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
-  </binding>
+      <wsdl:part name="arg1" type="xsd:int"/>
 
-  <service name="HelloService">
-    <port name="HelloPort" binding="tns:HelloPortBinding">
-      <soap:address location="http://localhost:9000/java-examples-axis/hello.ws" />
-    </port>
-  </service>
-</definitions>
+   </wsdl:message>
+
+   <wsdl:message name="addResponse">
+
+      <wsdl:part name="addReturn" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="absResponse">
+
+      <wsdl:part name="absReturn" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="addRequest">
+
+      <wsdl:part name="arg0" type="xsd:int"/>
+
+      <wsdl:part name="arg1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="HelloApi">
+
+      <wsdl:operation name="add" parameterOrder="arg0 arg1">
+
+         <wsdl:input message="impl:addRequest" name="addRequest"/>
+
+         <wsdl:output message="impl:addResponse" name="addResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="abs" parameterOrder="arg0 arg1">
+
+         <wsdl:input message="impl:absRequest" name="absRequest"/>
+
+         <wsdl:output message="impl:absResponse" name="absResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="HelloApiSoapBinding" type="impl:HelloApi">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="add">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="addRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ws.axis.examples.java.tachesimazzoca.github.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="addResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost:9000/java-examples-axis/services/HelloApi" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="abs">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="absRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ws.axis.examples.java.tachesimazzoca.github.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="absResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost:9000/java-examples-axis/services/HelloApi" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="HelloApiService">
+
+      <wsdl:port binding="impl:HelloApiSoapBinding" name="HelloApi">
+
+         <wsdlsoap:address location="http://localhost:9000/java-examples-axis/services/HelloApi"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

@@ -1,7 +1,8 @@
 package com.github.tachesimazzoca.java.examples.javase;
 
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ConcurrentHashMapExample {
@@ -9,24 +10,33 @@ public final class ConcurrentHashMapExample {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        for (int i = 0; i < 100; i++) {
-            System.out.println("ConcurrentHashMap is Thread safe.");
-            ConcurrentHashMap<Integer, Integer> cmap = new ConcurrentHashMap<Integer, Integer>();
-            Thread ct1 = new Thread(new CreateMapTask(cmap));
-            Thread ct2 = new Thread(new CreateMapTask(cmap));
-            ct1.start();
-            ct2.start();
-            ct1.join();
-            ct2.join();
+        final int MAX_ATTEMPTS = 10;
 
-            System.out.println("HashMap might cause an infinite loop.");
-            HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-            Thread t1 = new Thread(new CreateMapTask(map));
-            Thread t2 = new Thread(new CreateMapTask(map));
-            t1.start();
-            t2.start();
-            t1.join();
-            t2.join();
+        int numCores = Runtime.getRuntime().availableProcessors();
+
+        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+            System.out.println(String.format("-- Attempt %d in %d threads", i + 1, numCores));
+
+            long t = System.currentTimeMillis();
+            // ConcurrentHashMap can be used safely in multiple thread.
+            ConcurrentHashMap<Integer, Integer> chm = new ConcurrentHashMap<Integer, Integer>();
+            runInThreads(chm, numCores);
+            System.out.println(String.format(
+                    "ConcurrentHashMap: %d millis", System.currentTimeMillis() - t));
+
+            // Collections.synchronizedMap makes the given map synchronized.
+            t = System.currentTimeMillis();
+            Map<Integer, Integer> sm = Collections.synchronizedMap(new HashMap<Integer, Integer>());
+            runInThreads(sm, numCores);
+            System.out.println(String.format(
+                    "Collections.synchronizedMap: %d millis", System.currentTimeMillis() - t));
+
+            // Using HashMap in multiple threads might cause an infinite loop.
+            t = System.currentTimeMillis();
+            HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+            runInThreads(hm, numCores);
+            System.out.println(String.format(
+                    "HashMap: %d millis", System.currentTimeMillis() - t));
         }
     }
 
@@ -38,14 +48,28 @@ public final class ConcurrentHashMapExample {
         }
 
         public void run() {
-            for (int i = 0; i < 10000000; i++) {
-                int k = i % 10000;
+            for (int i = 0; i < 1000000; i++) {
+                int k = i % 1000;
                 if (map.containsKey(k)) {
                     map.remove(k);
                 } else {
                     map.put(k, i);
                 }
             }
+        }
+    }
+
+    private static void runInThreads(Map<Integer, Integer> m, int numberOfThreads)
+            throws InterruptedException {
+        Thread[] threads = new Thread[numberOfThreads];
+        for (int i = 0; i < numberOfThreads; i++) {
+            threads[i] = new Thread(new CreateMapTask(m));
+        }
+        for (int i = 0; i < numberOfThreads; i++) {
+            threads[i].start();
+        }
+        for (int i = 0; i < numberOfThreads; i++) {
+            threads[i].join();
         }
     }
 }

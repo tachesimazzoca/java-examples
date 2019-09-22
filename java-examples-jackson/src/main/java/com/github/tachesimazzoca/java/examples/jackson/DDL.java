@@ -12,6 +12,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 public class DDL {
+
+    private static final String NEWLINE = "\n";
+
     public static void convertJsonToSQL(InputStream input, OutputStream output)
             throws IOException {
         JsonFactory factory = new JsonFactory();
@@ -31,17 +34,20 @@ public class DDL {
 
         PrintWriter writer = new PrintWriter(output);
         writer.print("-- ");
-        writer.println(rootNode.path("name").asText());
-        writer.println();
+        writer.print(rootNode.path("name").asText());
+        writer.print(NEWLINE);
+        writer.print(NEWLINE);
 
         for (JsonNode tableNode : rootNode.path("tables")) {
             String tableName = tableNode.path("name").asText();
             writer.print("DROP TABLE IF EXISTS ");
             writer.print(tableName);
-            writer.println(";");
+            writer.print(";");
+            writer.print(NEWLINE);
             writer.print("CREATE TABLE ");
             writer.print(tableName);
-            writer.println(" (");
+            writer.print(" (");
+            writer.print(NEWLINE);
             for (JsonNode columnNode : tableNode.path("columns")) {
                 writer.print("  ");
                 writer.print(columnNode.path(0).asText());
@@ -49,22 +55,24 @@ public class DDL {
                 writer.print(columnNode.path(1).asText());
                 writer.print(",");
                 if (columnNode.size() > 2) {
-                    writer.println();
+                    writer.print(NEWLINE);
                     writer.print("    -- ");
                     writer.print(columnNode.path(2).asText());
                 }
-                writer.println();
+                writer.print(NEWLINE);
             }
             writer.print("  ");
             writer.print(tableNode.path("indexes").path(0).asText());
-            writer.println(",");
+            writer.print(",");
+            writer.print(NEWLINE);
             writer.print("  ");
             writer.print(tableNode.path("indexes").path(1).asText());
-            writer.println();
+            writer.print(NEWLINE);
             writer.print(") ");
             writer.print(tableNode.path("definition").asText());
-            writer.println(";");
-            writer.println();
+            writer.print(";");
+            writer.print(NEWLINE);
+            writer.print(NEWLINE);
         }
         writer.close();
     }

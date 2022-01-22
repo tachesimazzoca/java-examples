@@ -101,7 +101,7 @@ public class UserDaoTest {
         }
     }
 
-    @Test
+    //@Test
     public void testInsert() {
         ConnectionPoolFactory factory = new ConnectionPoolFactory();
         DBI dbi = new DBI(factory);

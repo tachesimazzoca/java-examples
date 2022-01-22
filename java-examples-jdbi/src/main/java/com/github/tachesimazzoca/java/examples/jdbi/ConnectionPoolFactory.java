@@ -11,7 +11,7 @@ public class ConnectionPoolFactory implements ConnectionFactory {
     private final JdbcConnectionPool pool;
 
     public ConnectionPoolFactory() {
-        pool = JdbcConnectionPool.create("jdbc:h2:mem:test", "", "");
+        pool = JdbcConnectionPool.create("jdbc:h2:mem:test;MODE=MYSQL", "", "");
         pool.setMaxConnections(5);
         pool.setLoginTimeout(1);
     }

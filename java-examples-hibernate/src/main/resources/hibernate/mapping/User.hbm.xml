@@ -4,7 +4,14 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.github.tachesimazzoca.java.examples.hibernate">
   <class name="User" table="USERS">
-    <id name="id" column="ID" type="long"><generator class="native"/></id>
+    <id name="id" column="ID" type="long">
+      <!--
+      NativeGenerator doesn't seem to support h2-2.1.x. Use SequenceGenerator, instead.
+      -->
+      <generator class="sequence">
+        <param name="sequence">user_id_sequence</param>
+      </generator>
+    </id>
     <property name="name" column="NAME"/>
     <property name="createdAt" column="CREATED_AT" type="timestamp"/>
     <property name="updatedAt" column="UPDATED_AT" type="timestamp"/>

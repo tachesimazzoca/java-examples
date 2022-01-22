@@ -18,19 +18,19 @@ public class ArticleTest {
         assertEquals(5, rows.size());
         Object[] idInfo = rows.get(0);
         assertEquals("ID", idInfo[0]);
-        assertEquals("BIGINT(19)", idInfo[1]);
+        assertEquals("BIGINT", idInfo[1]);
         Object[] titleInfo = rows.get(1);
         assertEquals("TITLE", titleInfo[0]);
-        assertEquals("VARCHAR(255)", titleInfo[1]);
+        assertEquals("CHARACTER VARYING(255)", titleInfo[1]);
         Object[] bodyInfo = rows.get(2);
         assertEquals("BODY", bodyInfo[0]);
-        assertEquals("VARCHAR(2147483647)", bodyInfo[1]);
+        assertEquals("CHARACTER VARYING", bodyInfo[1]);
         Object[] createdAtInfo = rows.get(3);
         assertEquals("CREATED_AT", createdAtInfo[0]);
-        assertEquals("TIMESTAMP(23)", createdAtInfo[1]);
+        assertEquals("TIMESTAMP", createdAtInfo[1]);
         Object[] updatedAtInfo = rows.get(4);
         assertEquals("UPDATED_AT", updatedAtInfo[0]);
-        assertEquals("TIMESTAMP(23)", updatedAtInfo[1]);
+        assertEquals("TIMESTAMP", updatedAtInfo[1]);
         s.getTransaction().commit();
     }
 

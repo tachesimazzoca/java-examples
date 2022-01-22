@@ -18,16 +18,16 @@ public class UserTest {
         assertEquals(4, rows.size());
         Object[] idInfo = rows.get(0);
         assertEquals("ID", idInfo[0]);
-        assertEquals("BIGINT(19)", idInfo[1]);
+        assertEquals("BIGINT", idInfo[1]);
         Object[] nameInfo = rows.get(1);
         assertEquals("NAME", nameInfo[0]);
-        assertEquals("VARCHAR(255)", nameInfo[1]);
+        assertEquals("CHARACTER VARYING(255)", nameInfo[1]);
         Object[] createdAtInfo = rows.get(2);
         assertEquals("CREATED_AT", createdAtInfo[0]);
-        assertEquals("TIMESTAMP(23)", createdAtInfo[1]);
+        assertEquals("TIMESTAMP", createdAtInfo[1]);
         Object[] updatedAtInfo = rows.get(3);
         assertEquals("UPDATED_AT", updatedAtInfo[0]);
-        assertEquals("TIMESTAMP(23)", updatedAtInfo[1]);
+        assertEquals("TIMESTAMP", updatedAtInfo[1]);
         s.getTransaction().commit();
     }
 

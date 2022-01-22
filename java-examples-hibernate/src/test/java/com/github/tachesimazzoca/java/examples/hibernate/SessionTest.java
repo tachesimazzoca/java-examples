@@ -1,11 +1,10 @@
 package com.github.tachesimazzoca.java.examples.hibernate;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-
-import org.hibernate.Session;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import org.hibernate.Session;
+import org.junit.Test;
 
 public class SessionTest {
     @Test
@@ -16,8 +15,9 @@ public class SessionTest {
         List<Object[]> items = s.createSQLQuery("SELECT 1, 2, 3").list();
         s.getTransaction().commit();
         assertEquals(1, items.size());
-        assertEquals(1, (int) items.get(0)[0]);
-        assertEquals(2, (int) items.get(0)[1]);
-        assertEquals(3, (int) items.get(0)[2]);
+        Object[] rows = items.get(0);
+        assertEquals("1", String.valueOf(rows[0]));
+        assertEquals("2", String.valueOf(rows[1]));
+        assertEquals("3", String.valueOf(rows[2]));
     }
 }

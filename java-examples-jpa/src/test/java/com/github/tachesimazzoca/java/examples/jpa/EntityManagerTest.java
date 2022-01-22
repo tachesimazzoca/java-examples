@@ -30,8 +30,9 @@ public class EntityManagerTest {
         assertEquals(5, rows.size());
         Set<String> columns = new HashSet<String>();
         for (Object[] row : rows) {
-            columns.add((String) row[0]);
+            columns.add(((String) row[0]).toLowerCase());
         }
+        System.out.println(columns);
         assertTrue(columns.contains("id"));
         assertTrue(columns.contains("name"));
         assertTrue(columns.contains("version"));
